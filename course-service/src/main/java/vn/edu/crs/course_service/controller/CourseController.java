@@ -1,34 +1,45 @@
 package vn.edu.crs.course_service.controller;
 
-import org.springframework.http.ResponseEntity;
+import vn.edu.crs.course_service.dto.CourseDTO;
+import vn.edu.crs.course_service.service.CourseService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import vn.edu.crs.course_service.entity.Course;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/courses")
+@RequestMapping("/courses")
+@RequiredArgsConstructor
 public class CourseController {
 
-    // Tạo một danh sách tạm (Mockup) để test
-    private final List<Course> mockCourses = new ArrayList<>();
+    private final CourseService courseService;
 
-    public CourseController() {
-        // Dữ liệu mẫu ban đầu
-        mockCourses.add(new Course(1L, "Kiến trúc Microservices", 3, 40, 15));
-        mockCourses.add(new Course(2L, "Lập trình Web Nâng cao", 3, 50, 5));
-    }
-
-    // 1. API lấy danh sách học phần (GET /api/courses)
     @GetMapping
-    public ResponseEntity<List<Course>> getAllCourses() {
-        return ResponseEntity.ok(mockCourses);
+    public List<CourseDTO> getAll() {
+        return courseService.getAll();
     }
 
-    // 2. API kiểm tra service hoạt động (GET /api/courses/ping)
-    @GetMapping("/ping")
-    public ResponseEntity<String> ping() {
-        return ResponseEntity.ok("Course Service đang hoạt động tốt tại cổng 8082!");
+    @GetMapping("/{id}")
+    public CourseDTO getById(@PathVariable Long id) {
+        return courseService.getById(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public CourseDTO create(@Valid @RequestBody CourseDTO dto) {
+        return courseService.create(dto);
+    }
+
+    @PutMapping("/{id}")
+    public CourseDTO update(@PathVariable Long id, @Valid @RequestBody CourseDTO dto) {
+        return courseService.update(id, dto);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        courseService.delete(id);
     }
 }
