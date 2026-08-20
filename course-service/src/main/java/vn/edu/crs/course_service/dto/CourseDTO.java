@@ -25,6 +25,5 @@ public class CourseDTO {
     @Min(value = 1, message = "So cho toi da phai lon hon 0")
     private Integer soChoToiDa;
 
-    // Không bắt buộc client gửi khi tạo mới; service sẽ tự gán bằng soChoToiDa
     private Integer soChoConLai;
 }

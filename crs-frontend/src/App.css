@@ -1,0 +1,36 @@
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: #f4f7fb; font-family: Inter, Arial, sans-serif; color: #1f2937; }
+.app { min-height: 100vh; padding: 40px; }
+.header { max-width: 1200px; margin: 0 auto 28px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.eyebrow { margin: 0 0 8px; font-size: 12px; font-weight: 700; letter-spacing: 2px; color: #6366f1; }
+.header h1 { margin: 0; font-size: 40px; color: #111827; }
+.subtitle { margin-top: 8px; color: #6b7280; }
+.status { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; font-size: 14px; font-weight: 600; }
+.status-success { background: #ecfdf5; color: #047857; }
+.status-error { background: #fef2f2; color: #b91c1c; }
+.status-dot { width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
+.content { max-width: 1200px; margin: 0 auto; }
+.summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 24px; }
+.summary-card { background: white; border-radius: 18px; padding: 22px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06); }
+.summary-card span { display: block; color: #6b7280; font-size: 14px; margin-bottom: 10px; }
+.summary-card strong { font-size: 28px; color: #111827; }
+.course-section { background: white; border-radius: 20px; padding: 26px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06); }
+.section-header h2 { margin: 0; font-size: 24px; }
+.section-header p { margin: 6px 0 22px; color: #6b7280; }
+.table-wrapper { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead { background: #f8fafc; }
+th, td { padding: 15px 18px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+th { font-size: 13px; color: #64748b; font-weight: 700; }
+td { font-size: 15px; }
+tbody tr:hover { background: #f9fafb; }
+.course-name { font-weight: 600; color: #111827; }
+.available { display: inline-block; min-width: 42px; text-align: center; padding: 5px 10px; border-radius: 999px; background: #eef2ff; color: #4338ca; font-weight: 700; }
+.message { padding: 30px 0; text-align: center; color: #6b7280; }
+.error-box { padding: 14px 18px; border-radius: 12px; background: #fef2f2; color: #b91c1c; }
+@media (max-width: 768px) {
+  .app { padding: 20px; }
+  .header { flex-direction: column; align-items: flex-start; }
+  .summary { grid-template-columns: 1fr; }
+  .header h1 { font-size: 32px; }
+}

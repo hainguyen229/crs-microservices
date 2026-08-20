@@ -88,7 +88,7 @@ Hệ thống được chia thành 4 service độc lập theo nguyên tắc hư�
 
 ## 3. Bảng Định Tuyến Gateway Dự Kiến (Expected Gateway Routing Table)
 
-API Gateway sẽ định tuyến các request dựa trên tiền tố đường dẫn (Path Prefix):
+API Gateway sẽ định tuyến các request dựa trên tiền tố đường dẫn (Path Prefix):/
 
 | Đường dẫn (Path Pattern) | Service Đích (Target Service) | Cổng dự kiến | Yêu cầu xác thực (Auth) | Mô tả |
 | :--- | :--- | :--- | :--- | :--- |

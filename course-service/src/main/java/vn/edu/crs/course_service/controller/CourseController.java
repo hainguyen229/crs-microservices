@@ -4,10 +4,10 @@ import vn.edu.crs.course_service.dto.CourseDTO;
 import vn.edu.crs.course_service.service.CourseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/courses")
@@ -17,8 +17,10 @@ public class CourseController {
     private final CourseService courseService;
 
     @GetMapping
-    public List<CourseDTO> getAll() {
-        return courseService.getAll();
+    public Page<CourseDTO> getAll(
+            @RequestParam(required = false) String keyword,
+            Pageable pageable) {
+        return courseService.getAll(keyword, pageable);
     }
 
     @GetMapping("/{id}")
@@ -33,7 +35,9 @@ public class CourseController {
     }
 
     @PutMapping("/{id}")
-    public CourseDTO update(@PathVariable Long id, @Valid @RequestBody CourseDTO dto) {
+    public CourseDTO update(
+            @PathVariable Long id,
+            @Valid @RequestBody CourseDTO dto) {
         return courseService.update(id, dto);
     }
 
