@@ -1,7 +1,6 @@
 package vn.edu.crs.auth_service.security;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,7 +18,7 @@ public class JwtUtil {
     @Value("${jwt.expiration-ms}")
     private long expirationMs;
 
-    public String generateToken(String username, String role) {
+    public String generateToken(Long userId, String username, String role) {
 
         SecretKey key = Keys.hmacShaKeyFor(
                 secret.getBytes(StandardCharsets.UTF_8)
@@ -30,6 +29,7 @@ public class JwtUtil {
 
         return Jwts.builder()
                 .subject(username)
+                .claim("userId", userId)
                 .claim("role", role)
                 .issuedAt(now)
                 .expiration(expiry)

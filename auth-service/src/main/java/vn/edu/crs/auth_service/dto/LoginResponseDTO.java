@@ -2,6 +2,7 @@ package vn.edu.crs.auth_service.dto;
 
 public class LoginResponseDTO {
 
+    private Long userId;
     private String token;
     private String username;
     private String role;
@@ -9,10 +10,19 @@ public class LoginResponseDTO {
     public LoginResponseDTO() {
     }
 
-    public LoginResponseDTO(String token, String username, String role) {
+    public LoginResponseDTO(Long userId, String token, String username, String role) {
+        this.userId = userId;
         this.token = token;
         this.username = username;
         this.role = role;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getToken() {

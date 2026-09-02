@@ -6,6 +6,7 @@ import com.example.registrationservice.service.RegistrationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,14 +26,28 @@ public class RegistrationController {
 
     // API lấy theo studentId
     @GetMapping("/student/{studentId}")
-    public List<Registration> getByStudentId(@PathVariable Long studentId) {
+    public List<Registration> getByStudentId(
+            @PathVariable Long studentId
+    ) {
         return registrationService.getByStudentId(studentId);
+    }
+
+    // API lấy danh sách đăng ký của sinh viên đang đăng nhập
+    @GetMapping("/my")
+    public List<Registration> getMyRegistrations(
+            Authentication authentication
+    ) {
+        Long studentId = (Long) authentication.getCredentials();
+
+        return registrationService.getMyRegistrations(studentId);
     }
 
     // Đăng ký môn học
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Registration register(@Valid @RequestBody RegistrationRequestDTO dto) {
+    public Registration register(
+            @Valid @RequestBody RegistrationRequestDTO dto
+    ) {
         return registrationService.register(dto);
     }
 

@@ -40,7 +40,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         try {
-            String token = authHeader.substring(7);
+            String token = authHeader.substring(7).trim();
 
             SecretKey key = Keys.hmacShaKeyFor(
                     jwtSecret.getBytes(StandardCharsets.UTF_8)
@@ -55,18 +55,61 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String username = claims.getSubject();
             String role = claims.get("role", String.class);
 
+            Number userIdNumber = claims.get("userId", Number.class);
+            Long userId = userIdNumber != null
+                    ? userIdNumber.longValue()
+                    : null;
+
+            if (username == null || username.isBlank()) {
+                throw new RuntimeException("JWT không có username");
+            }
+
+            if (role == null || role.isBlank()) {
+                throw new RuntimeException("JWT không có role");
+            }
+
+            if (userId == null) {
+                throw new RuntimeException("JWT không có userId");
+            }
+
+            role = role.trim().toUpperCase();
+
+            if (role.startsWith("ROLE_")) {
+                role = role.substring(5);
+            }
+
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
                             username,
-                            null,
-                            List.of(new SimpleGrantedAuthority("ROLE_" + role))
+                            userId,
+                            List.of(
+                                    new SimpleGrantedAuthority("ROLE_" + role)
+                            )
                     );
 
             SecurityContextHolder.getContext()
                     .setAuthentication(authentication);
 
+            System.out.println(
+                    "JWT OK -> username = " + username
+                            + ", userId = " + userId
+                            + ", role = " + role
+            );
+
         } catch (Exception e) {
+
+            SecurityContextHolder.clearContext();
+
+            System.out.println("JWT ERROR -> " + e.getMessage());
+
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(
+                    "{\"error\":\"Invalid JWT\",\"message\":\""
+                            + e.getMessage()
+                            + "\"}"
+            );
+
             return;
         }
 

@@ -8,6 +8,9 @@ interface CourseListProps {
   onRetry: () => void;
   onEdit?: (course: Course) => void;
   onDelete?: (course: Course) => void;
+  onRegister?: (course: Course) => void;
+  registeringId?: number | null;
+  registeredCourseIds?: number[];
 }
 
 export default function CourseList({
@@ -17,6 +20,9 @@ export default function CourseList({
   onRetry,
   onEdit,
   onDelete,
+  onRegister,
+  registeringId,
+  registeredCourseIds = [],
 }: CourseListProps) {
   if (state === 'loading') {
     return <p>Dang tai danh sach mon hoc...</p>;
@@ -35,7 +41,8 @@ export default function CourseList({
     return <p>Khong tim thay mon hoc nao phu hop.</p>;
   }
 
-  const showActions = !!onEdit || !!onDelete;
+  const showActions =
+    !!onEdit || !!onDelete || !!onRegister;
 
   return (
     <table
@@ -54,56 +61,86 @@ export default function CourseList({
           <th>Ten mon hoc</th>
           <th>So tin chi</th>
           <th>So cho con lai</th>
+
           {showActions && <th>Thao tac</th>}
         </tr>
       </thead>
 
       <tbody>
-        {courses.map((course) => (
-          <tr
-            key={course.id}
-            style={{
-              borderBottom: '1px solid #eee',
-            }}
-          >
-            <td>{course.tenMonHoc}</td>
+        {courses.map((course) => {
+          const isRegistered =
+            registeredCourseIds.includes(course.id);
 
-            <td>{course.soTinChi}</td>
-
-            <td
+          return (
+            <tr
+              key={course.id}
               style={{
-                color:
-                  course.soChoConLai === 0
-                    ? '#b91c1c'
-                    : 'inherit',
+                borderBottom: '1px solid #eee',
               }}
             >
-              {course.soChoConLai} / {course.soChoToiDa}
-            </td>
+              <td>{course.tenMonHoc}</td>
 
-            {showActions && (
-              <td>
-                {onEdit && (
-                  <button onClick={() => onEdit(course)}>
-                    Sua
-                  </button>
-                )}
+              <td>{course.soTinChi}</td>
 
-                {onDelete && (
-                  <button
-                    onClick={() => onDelete(course)}
-                    style={{
-                      marginLeft: 8,
-                      color: '#b91c1c',
-                    }}
-                  >
-                    Xoa
-                  </button>
-                )}
+              <td
+                style={{
+                  color:
+                    course.soChoConLai === 0
+                      ? '#b91c1c'
+                      : 'inherit',
+                }}
+              >
+                {course.soChoConLai} / {course.soChoToiDa}
               </td>
-            )}
-          </tr>
-        ))}
+
+              {showActions && (
+                <td>
+                  {onEdit && (
+                    <button
+                      onClick={() => onEdit(course)}
+                    >
+                      Sua
+                    </button>
+                  )}
+
+                  {onDelete && (
+                    <button
+                      onClick={() => onDelete(course)}
+                      style={{
+                        marginLeft: 8,
+                        color: '#b91c1c',
+                      }}
+                    >
+                      Xoa
+                    </button>
+                  )}
+
+                  {onRegister && (
+                    <button
+                      onClick={() => onRegister(course)}
+                      disabled={
+                        course.soChoConLai === 0 ||
+                        registeringId === course.id ||
+                        isRegistered
+                      }
+                      style={{
+                        marginLeft: 8,
+                      }}
+                    >
+                      {isRegistered
+                        ? 'Da dang ky'
+                        : registeringId === course.id
+                          ? 'Dang dang ky...'
+                          : course.soChoConLai === 0
+                            ? 'Het cho'
+                            : 'Dang ky'}
+                    </button>
+                  )}
+                </td>
+              )}
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );

@@ -24,16 +24,13 @@ public class RegistrationService {
 
     @Transactional
     public Registration register(RegistrationRequestDTO dto) {
-        // Kiểm tra sinh viên đã đăng ký môn này chưa
         if (registrationRepository.existsByStudentIdAndCourseIdAndTrangThai(
                 dto.getStudentId(), dto.getCourseId(), DA_DANG_KY)) {
             throw new IllegalStateException("Sinh viên đã đăng ký môn học này rồi");
         }
 
-        // Gọi sang course-service để trừ chỗ
         courseClient.reserveSeat(dto.getCourseId());
 
-        // Lưu registration
         Registration registration = new Registration();
         registration.setStudentId(dto.getStudentId());
         registration.setCourseId(dto.getCourseId());
@@ -46,24 +43,33 @@ public class RegistrationService {
     @Transactional
     public void cancel(Long id) {
         Registration registration = registrationRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Không tìm thấy đăng ký id = " + id));
+                .orElseThrow(() ->
+                        new NoSuchElementException(
+                                "Không tìm thấy đăng ký id = " + id
+                        )
+                );
 
         if (DA_HUY.equals(registration.getTrangThai())) {
-            throw new IllegalStateException("Đăng ký này đã được hủy trước đó");
+            throw new IllegalStateException(
+                    "Đăng ký này đã được hủy trước đó"
+            );
         }
 
-        // Gọi sang course-service để hoàn chỗ
         courseClient.releaseSeat(registration.getCourseId());
 
-        // Cập nhật trạng thái
         registration.setTrangThai(DA_HUY);
         registrationRepository.save(registration);
     }
+
     public List<Registration> getAll() {
         return registrationRepository.findAll();
     }
 
     public List<Registration> getByStudentId(Long studentId) {
+        return registrationRepository.findByStudentId(studentId);
+    }
+
+    public List<Registration> getMyRegistrations(Long studentId) {
         return registrationRepository.findByStudentId(studentId);
     }
 }

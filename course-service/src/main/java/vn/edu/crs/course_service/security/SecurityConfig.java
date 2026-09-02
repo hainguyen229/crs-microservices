@@ -32,6 +32,11 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
+                        // API nội bộ giữa các service
+                        .requestMatchers(
+                                "/internal/courses/**"
+                        ).permitAll()
+
                         // GET courses: không cần đăng nhập
                         .requestMatchers(
                                 HttpMethod.GET,

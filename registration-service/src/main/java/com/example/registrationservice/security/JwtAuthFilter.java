@@ -56,12 +56,21 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String username = claims.getSubject();
             String role = claims.get("role", String.class);
 
+            Number userIdNumber = claims.get("userId", Number.class);
+            Long userId = userIdNumber != null
+                    ? userIdNumber.longValue()
+                    : null;
+
             if (username == null || username.isBlank()) {
                 throw new RuntimeException("JWT không có username");
             }
 
             if (role == null || role.isBlank()) {
                 throw new RuntimeException("JWT không có role");
+            }
+
+            if (userId == null) {
+                throw new RuntimeException("JWT không có userId");
             }
 
             // Chuẩn hóa role
@@ -77,7 +86,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
                             username,
-                            null,
+                            userId,
                             Collections.singletonList(authority)
                     );
 
@@ -87,6 +96,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             System.out.println(
                     "JWT OK -> username = " + username +
+                            ", userId = " + userId +
                             ", authority = " + authority.getAuthority()
             );
 
