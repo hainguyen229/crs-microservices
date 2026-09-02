@@ -6,8 +6,8 @@ interface CourseListProps {
   state: LoadState;
   errorMessage: string;
   onRetry: () => void;
-  onEdit: (course: Course) => void;
-  onDelete: (course: Course) => void;
+  onEdit?: (course: Course) => void;
+  onDelete?: (course: Course) => void;
 }
 
 export default function CourseList({
@@ -35,6 +35,8 @@ export default function CourseList({
     return <p>Khong tim thay mon hoc nao phu hop.</p>;
   }
 
+  const showActions = !!onEdit || !!onDelete;
+
   return (
     <table
       style={{
@@ -52,7 +54,7 @@ export default function CourseList({
           <th>Ten mon hoc</th>
           <th>So tin chi</th>
           <th>So cho con lai</th>
-          <th>Thao tac</th>
+          {showActions && <th>Thao tac</th>}
         </tr>
       </thead>
 
@@ -79,23 +81,27 @@ export default function CourseList({
               {course.soChoConLai} / {course.soChoToiDa}
             </td>
 
-            <td>
-              <button
-                onClick={() => onEdit(course)}
-              >
-                Sua
-              </button>
+            {showActions && (
+              <td>
+                {onEdit && (
+                  <button onClick={() => onEdit(course)}>
+                    Sua
+                  </button>
+                )}
 
-              <button
-                onClick={() => onDelete(course)}
-                style={{
-                  marginLeft: 8,
-                  color: '#b91c1c',
-                }}
-              >
-                Xoa
-              </button>
-            </td>
+                {onDelete && (
+                  <button
+                    onClick={() => onDelete(course)}
+                    style={{
+                      marginLeft: 8,
+                      color: '#b91c1c',
+                    }}
+                  >
+                    Xoa
+                  </button>
+                )}
+              </td>
+            )}
           </tr>
         ))}
       </tbody>
